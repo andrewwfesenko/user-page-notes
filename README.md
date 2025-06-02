@@ -1,8 +1,13 @@
 # User Page Notes WordPress Plugin
 
+[![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
 A modern WordPress plugin that allows logged-in users to add personal notes to any page on your website. Built with modern PHP OOP principles, SCSS styling, and AJAX functionality.
 
-## Features
+## ✨ Features
 
 - ✅ **Personal Notes**: Each user can add private notes visible only to them
 - ✅ **Any Page Support**: Works on any WordPress page, post, or custom post type
@@ -13,20 +18,20 @@ A modern WordPress plugin that allows logged-in users to add personal notes to a
 - ✅ **OOP Architecture**: Clean, maintainable code following WordPress best practices
 - ✅ **Admin Dashboard**: View statistics and manage plugin settings
 
-## Requirements
+## 🔧 Requirements
 
 - WordPress 5.0 or higher
 - PHP 7.4 or higher
 - MySQL 5.6 or higher
 
-## Installation
+## 📦 Installation
 
 1. Upload the `user-page-notes` folder to your `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. The plugin will automatically create the necessary database table
 4. Configure settings under Settings → User Page Notes
 
-## Usage
+## 🚀 Usage
 
 ### For Users
 
@@ -45,7 +50,7 @@ Administrators can:
 2. **View Statistics**: See total notes, active users, and daily activity
 3. **Monitor Usage**: Track how the feature is being used across the site
 
-## File Structure
+## 🏗️ File Structure
 
 ```
 user-page-notes/
@@ -71,7 +76,7 @@ user-page-notes/
 └── README.md                    # This file
 ```
 
-## Database Schema
+## 💾 Database Schema
 
 The plugin creates a single table `wp_user_page_notes` with the following structure:
 
@@ -94,18 +99,7 @@ CREATE TABLE wp_user_page_notes (
 );
 ```
 
-## AJAX Endpoints
-
-The plugin registers the following AJAX actions:
-
-- `upn_add_note` - Add a new note
-- `upn_update_note` - Update an existing note
-- `upn_delete_note` - Delete a note
-- `upn_get_notes` - Get notes for a page
-
-All endpoints require proper nonce verification and user authentication.
-
-## Security Features
+## 🔐 Security Features
 
 - **Nonce Verification**: All AJAX requests use WordPress nonces
 - **User Authentication**: Only logged-in users can access the functionality
@@ -113,7 +107,7 @@ All endpoints require proper nonce verification and user authentication.
 - **SQL Injection Protection**: Uses WordPress prepared statements
 - **XSS Protection**: Output is properly escaped
 
-## Styling
+## 🎨 Styling
 
 The plugin uses SCSS for styling which is compiled to CSS. Key styling features:
 
@@ -122,16 +116,17 @@ The plugin uses SCSS for styling which is compiled to CSS. Key styling features:
 - **Modern Animations**: Smooth transitions and hover effects
 - **WordPress Integration**: Follows WordPress admin design patterns
 
-## JavaScript Architecture
+## 🧩 JavaScript Architecture
 
 The frontend JavaScript is organized using ES6+ features:
 
 - **Class-based Structure**: Clean, maintainable code
+- **Vanilla JavaScript**: No jQuery dependency
 - **Event Delegation**: Efficient event handling
 - **Promise-based AJAX**: Modern async handling
 - **Utility Methods**: Debouncing and throttling for performance
 
-## Customization
+## 🎯 Customization
 
 ### Styling
 
@@ -161,7 +156,7 @@ add_filter('upn_before_save_note', function($note_data) {
 });
 ```
 
-## Performance
+## ⚡ Performance
 
 The plugin is optimized for performance:
 
@@ -170,14 +165,14 @@ The plugin is optimized for performance:
 - **Efficient Queries**: Optimized database queries with proper indexing
 - **Caching Ready**: Compatible with WordPress caching plugins
 
-## Browser Support
+## 🌐 Browser Support
 
 - Chrome 60+
 - Firefox 55+
 - Safari 12+
 - Edge 79+
 
-## Changelog
+## 📋 Changelog
 
 ### Version 1.0.0
 - Initial release
@@ -186,7 +181,7 @@ The plugin is optimized for performance:
 - Admin settings panel
 - Security features
 
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -194,10 +189,14 @@ The plugin is optimized for performance:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## 📄 License
 
 This plugin is licensed under the GPL v2 or later.
 
-## Support
+## 👨‍💻 Author
 
-For support questions, please contact the plugin author or submit an issue on the project repository. 
+**Andrew Fesenko** - [GitHub](https://github.com/andrewwfesenko)
+
+## 🙏 Support
+
+For support questions, please create an issue on the [GitHub repository](https://github.com/andrewwfesenko/user-page-notes/issues). 
