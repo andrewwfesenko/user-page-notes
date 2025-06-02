@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/user-page-notes.git"
+    "url": "git+https://github.com/andrewwfesenko/user-page-notes.git"
   },
   "keywords": [
     "wordpress",
@@ -22,12 +22,12 @@
     "user",
     "frontend"
   ],
-  "author": "Your Name",
+  "author": "Andrew Fesenko",
   "license": "GPL-2.0-or-later",
   "bugs": {
-    "url": "https://github.com/yourusername/user-page-notes/issues"
+    "url": "https://github.com/andrewwfesenko/user-page-notes/issues"
   },
-  "homepage": "https://github.com/yourusername/user-page-notes#readme",
+  "homepage": "https://github.com/andrewwfesenko/user-page-notes#readme",
   "devDependencies": {
     "sass": "^1.69.0",
     "clean-css-cli": "^5.6.2"
