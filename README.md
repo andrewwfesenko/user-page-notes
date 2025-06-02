@@ -146,25 +146,6 @@ We welcome contributions that maintain the **simplicity and performance** focus:
 - ♿ **Accessibility**: Improved keyboard navigation
 - 🧹 **Clean Code**: Applied KISS principle throughout
 
-### **What Was Removed**
-- Complex position tracking system
-- Metadata JSON columns  
-- Auto-save functionality
-- Advanced validation systems
-- Debug logging systems
-- Multiple modal reference systems
-- Container queries and modern CSS complexity
-- Fulltext search features
-- Window functions
-- REST API endpoints
-
-### **What Was Kept**
-- ✅ All core functionality (add, edit, delete notes)
-- ✅ Clean, professional UI
-- ✅ Responsive design
-- ✅ Security and validation
-- ✅ Performance optimizations
-
 ## 📄 License
 
 This project is licensed under the **GPL v2 or later** - see the [LICENSE](LICENSE) file for details.
