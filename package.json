@@ -1,0 +1,39 @@
+{
+  "name": "user-page-notes",
+  "version": "1.0.0",
+  "description": "A WordPress plugin that allows logged-in users to add personal notes to any page",
+  "main": "user-page-notes.php",
+  "scripts": {
+    "build-css": "sass assets/scss/frontend.scss assets/css/frontend.css",
+    "watch-css": "sass --watch assets/scss/frontend.scss:assets/css/frontend.css",
+    "minify-css": "cleancss -o assets/css/frontend.min.css assets/css/frontend.css",
+    "build": "npm run build-css && npm run minify-css",
+    "dev": "npm run watch-css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/user-page-notes.git"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "notes",
+    "ajax",
+    "user",
+    "frontend"
+  ],
+  "author": "Your Name",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/yourusername/user-page-notes/issues"
+  },
+  "homepage": "https://github.com/yourusername/user-page-notes#readme",
+  "devDependencies": {
+    "sass": "^1.69.0",
+    "clean-css-cli": "^5.6.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+} 

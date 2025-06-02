@@ -1,0 +1,662 @@
+// Variables
+$primary-color: #2271b1;
+$primary-hover: #135e96;
+$secondary-color: #50575e;
+$success-color: #00a32a;
+$danger-color: #d63638;
+$warning-color: #dba617;
+
+$background-white: #ffffff;
+$background-light: #f6f7f7;
+$background-overlay: rgba(0, 0, 0, 0.5);
+
+$border-color: #ddd;
+$border-radius: 8px;
+$border-radius-small: 4px;
+
+$shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+$shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+$font-size-sm: 12px;
+$font-size-base: 14px;
+$font-size-lg: 16px;
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+$z-index-modal: 1000;
+$z-index-overlay: 999;
+$z-index-tooltip: 1001;
+
+// Mixins
+@mixin button-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin transition($property: all, $duration: 0.3s, $easing: ease) {
+    transition: $property $duration $easing;
+}
+
+@mixin scrollbar-thin {
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+        
+        &:hover {
+            background: #a1a1a1;
+        }
+    }
+}
+
+// Main container
+.upn-notes-container {
+    position: fixed;
+    top: 50%;
+    right: $spacing-lg;
+    transform: translateY(-50%);
+    z-index: $z-index-overlay;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: $font-size-base;
+    line-height: 1.4;
+    
+    * {
+        box-sizing: border-box;
+    }
+}
+
+// Toggle button
+.upn-toggle-btn {
+    @include button-reset;
+    @include flex-center;
+    @include transition;
+    
+    position: relative;
+    width: 56px;
+    height: 56px;
+    background: $primary-color;
+    color: white;
+    border-radius: 50%;
+    box-shadow: $shadow-medium;
+    
+    &:hover {
+        background: $primary-hover;
+        transform: scale(1.05);
+        box-shadow: $shadow-heavy;
+    }
+    
+    &:active {
+        transform: scale(0.95);
+    }
+    
+    svg {
+        @include transition;
+    }
+    
+    &.active svg {
+        transform: rotate(180deg);
+    }
+}
+
+// Badge for note count
+.upn-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: $danger-color;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: $font-size-sm;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+// Notes panel
+.upn-notes-panel {
+    position: absolute;
+    right: 72px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 320px;
+    max-height: 500px;
+    background: $background-white;
+    border-radius: $border-radius;
+    box-shadow: $shadow-heavy;
+    opacity: 0;
+    visibility: hidden;
+    @include transition(all, 0.3s, cubic-bezier(0.25, 0.46, 0.45, 0.94));
+    transform: translateY(-50%) translateX(20px) scale(0.95);
+    
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) translateX(0) scale(1);
+    }
+}
+
+// Panel header
+.upn-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 1px solid #eee;
+    
+    h3 {
+        margin: 0;
+        font-size: $font-size-lg;
+        font-weight: 600;
+        color: $secondary-color;
+    }
+    
+    .upn-add-btn,
+    .upn-close-btn {
+        @include button-reset;
+        @include flex-center;
+        @include transition;
+        
+        width: 32px;
+        height: 32px;
+        border-radius: $border-radius-small;
+        color: $secondary-color;
+        
+        &:hover {
+            background: $background-light;
+        }
+    }
+    
+    .upn-add-btn {
+        margin-right: $spacing-sm;
+        
+        &:hover {
+            color: $primary-color;
+        }
+    }
+}
+
+// Panel content
+.upn-panel-content {
+    max-height: 400px;
+    overflow-y: auto;
+    @include scrollbar-thin;
+}
+
+// Loading state
+.upn-loading {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-xl;
+    color: $secondary-color;
+    
+    p {
+        margin: $spacing-md 0 0 0;
+        font-size: $font-size-sm;
+    }
+}
+
+// Spinner animation
+.upn-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+// Notes list
+.upn-notes-list {
+    padding: $spacing-md;
+}
+
+// Individual note
+.upn-note {
+    background: $background-white;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-small;
+    padding: $spacing-md;
+    margin-bottom: $spacing-md;
+    @include transition;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+    
+    &:hover {
+        border-color: $primary-color;
+        box-shadow: $shadow-light;
+    }
+}
+
+.upn-note-content {
+    margin-bottom: $spacing-sm;
+    line-height: 1.5;
+    word-wrap: break-word;
+    
+    p {
+        margin: 0 0 $spacing-sm 0;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.upn-note-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: $font-size-sm;
+    color: #666;
+}
+
+.upn-note-date {
+    font-style: italic;
+}
+
+.upn-note-actions {
+    display: flex;
+    gap: $spacing-xs;
+}
+
+.upn-note-edit,
+.upn-note-delete {
+    @include button-reset;
+    @include flex-center;
+    @include transition;
+    
+    width: 24px;
+    height: 24px;
+    border-radius: $border-radius-small;
+    color: #666;
+    
+    &:hover {
+        background: $background-light;
+    }
+}
+
+.upn-note-edit:hover {
+    color: $primary-color;
+}
+
+.upn-note-delete:hover {
+    color: $danger-color;
+}
+
+// Empty state
+.upn-empty-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-xl;
+    text-align: center;
+    color: #666;
+    
+    svg {
+        margin-bottom: $spacing-md;
+        opacity: 0.5;
+    }
+    
+    h4 {
+        margin: 0 0 $spacing-sm 0;
+        font-size: $font-size-lg;
+        font-weight: 600;
+    }
+    
+    p {
+        margin: 0;
+        font-size: $font-size-sm;
+        opacity: 0.8;
+    }
+}
+
+// Modal
+.upn-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $background-overlay;
+    z-index: $z-index-modal;
+    @include flex-center;
+    opacity: 0;
+    visibility: hidden;
+    @include transition;
+    margin: 0;
+    padding: 0;
+    
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        
+        .upn-modal-content {
+            transform: scale(1);
+        }
+    }
+}
+
+.upn-modal-content {
+    background: $background-white;
+    border-radius: $border-radius;
+    box-shadow: $shadow-heavy;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    transform: scale(0.9);
+    @include transition(transform, 0.3s, cubic-bezier(0.25, 0.46, 0.45, 0.94));
+    position: relative;
+    margin: 0 auto;
+}
+
+.upn-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg;
+    border-bottom: 1px solid #eee;
+    background: $background-white;
+    
+    h4 {
+        margin: 0;
+        font-size: $font-size-lg;
+        font-weight: 600;
+        color: $secondary-color;
+    }
+    
+    .upn-close-btn {
+        @include button-reset;
+        @include flex-center;
+        @include transition;
+        
+        width: 32px;
+        height: 32px;
+        border-radius: $border-radius-small;
+        color: $secondary-color;
+        
+        &:hover {
+            background: $background-light;
+        }
+    }
+}
+
+.upn-modal-body {
+    padding: $spacing-lg;
+    background: $background-white;
+}
+
+// Form elements
+.upn-form-group {
+    margin-bottom: $spacing-lg;
+    
+    textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: $spacing-md;
+        border: 1px solid $border-color;
+        border-radius: $border-radius-small;
+        font-family: inherit;
+        font-size: $font-size-base;
+        line-height: 1.5;
+        resize: vertical;
+        @include transition;
+        box-sizing: border-box;
+        
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+        
+        &::placeholder {
+            color: #999;
+        }
+    }
+}
+
+.upn-form-actions {
+    display: flex;
+    gap: $spacing-md;
+    justify-content: flex-end;
+}
+
+// Buttons
+.upn-btn {
+    @include transition;
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px $spacing-lg;
+    border: 1px solid transparent;
+    border-radius: $border-radius-small;
+    font-family: inherit;
+    font-size: $font-size-base;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    white-space: nowrap;
+    
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    &.upn-btn-primary {
+        background: $primary-color;
+        color: white;
+        border-color: $primary-color;
+        
+        &:hover:not(:disabled) {
+            background: $primary-hover;
+            border-color: $primary-hover;
+        }
+    }
+    
+    &.upn-btn-secondary {
+        background: transparent;
+        color: $secondary-color;
+        border-color: $border-color;
+        
+        &:hover:not(:disabled) {
+            background: $background-light;
+            border-color: #999;
+        }
+    }
+}
+
+// Messages
+.upn-message {
+    position: fixed;
+    top: $spacing-lg;
+    right: $spacing-lg;
+    z-index: $z-index-tooltip;
+    max-width: 400px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    @include transition;
+    
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+    
+    &.success .upn-message-content {
+        background: $success-color;
+    }
+    
+    &.error .upn-message-content {
+        background: $danger-color;
+    }
+    
+    &.warning .upn-message-content {
+        background: $warning-color;
+    }
+}
+
+.upn-message-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md $spacing-lg;
+    background: $success-color;
+    color: white;
+    border-radius: $border-radius-small;
+    box-shadow: $shadow-medium;
+}
+
+.upn-message-text {
+    flex: 1;
+    margin-right: $spacing-md;
+}
+
+.upn-message-close {
+    @include button-reset;
+    @include flex-center;
+    @include transition;
+    
+    width: 24px;
+    height: 24px;
+    color: white;
+    font-size: 18px;
+    
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .upn-notes-container {
+        right: $spacing-md;
+    }
+    
+    .upn-notes-panel {
+        width: 280px;
+        right: 68px;
+    }
+    
+    .upn-modal-content {
+        width: 95%;
+        margin: $spacing-md;
+    }
+    
+    .upn-message {
+        right: $spacing-md;
+        max-width: calc(100vw - #{$spacing-lg * 2});
+    }
+}
+
+@media (max-width: 480px) {
+    .upn-notes-panel {
+        position: fixed;
+        right: 0;
+        top: 0;
+        transform: none;
+        width: 100vw;
+        height: 100vh;
+        max-height: none;
+        border-radius: 0;
+        
+        .upn-panel-content {
+            max-height: calc(100vh - 80px);
+        }
+    }
+    
+    .upn-toggle-btn {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .upn-modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+    
+    .upn-form-actions {
+        flex-direction: column;
+    }
+    
+    .upn-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+// Animation classes
+.upn-fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+.upn-fade-out {
+    animation: fadeOut 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+// Utility classes
+.upn-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+} 
