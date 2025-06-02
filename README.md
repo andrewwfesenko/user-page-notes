@@ -1,6 +1,6 @@
 # 📝 User Page Notes
 
-[![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-8.0%2B-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![Clean Code](https://img.shields.io/badge/Code-Clean%20%26%20Simple-green.svg)](https://github.com/andrewwfesenko/user-page-notes)
@@ -29,7 +29,7 @@ This plugin follows the **KISS principle** and **modern simplicity**:
 
 ## 🔧 Requirements
 
-- **WordPress 5.0+** 
+- **WordPress 6.0+** 
 - **PHP 8.0+** 
 - **MySQL 5.7+**
 
@@ -81,11 +81,10 @@ class UserPageNotes {
 
 ## 📊 Performance Stats
 
-- **JavaScript**: 230 lines (down from 682)
-- **PHP Database Class**: 159 lines (down from 396) 
-- **PHP Ajax Class**: 120 lines (down from 200)
-- **CSS**: 370 lines (streamlined and optimized)
-- **Total**: Over 1,000 lines of code removed while maintaining full functionality!
+- **JavaScript**: 230 lines
+- **PHP Database Class**: 159 lines
+- **PHP Ajax Class**: 120 lines
+- **CSS**: 370 lines
 
 ## 🛠️ Development
 
