@@ -4,216 +4,144 @@ namespace UPN\Core;
 
 /**
  * AJAX handler for User Page Notes
+ * Clean and simple implementation
  */
 class Ajax {
     
-    private $database;
+    private readonly Database $database;
     
-    public function __construct() {
-        $this->database = new Database();
-        
-        // Register AJAX actions for logged-in users
-        add_action('wp_ajax_upn_add_note', [$this, 'addNote']);
-        add_action('wp_ajax_upn_update_note', [$this, 'updateNote']);
-        add_action('wp_ajax_upn_delete_note', [$this, 'deleteNote']);
-        add_action('wp_ajax_upn_get_notes', [$this, 'getNotes']);
+    public function __construct(Database $database) {
+        $this->database = $database;
+        $this->init();
     }
     
-    /**
-     * Verify AJAX nonce and user permissions
-     */
-    private function verifyRequest() {
-        // Check nonce
-        if (!wp_verify_nonce($_POST['nonce'] ?? '', 'upn_ajax_nonce')) {
-            wp_die(__('Security check failed', 'user-page-notes'), 403);
+    private function init(): void {
+        add_action('wp_ajax_upn_add_note', $this->addNote(...));
+        add_action('wp_ajax_upn_update_note', $this->updateNote(...));
+        add_action('wp_ajax_upn_delete_note', $this->deleteNote(...));
+        add_action('wp_ajax_upn_get_notes', $this->getNotes(...));
+    }
+    
+    private function verifyRequest(): int {
+        if (!wp_verify_nonce($_POST['nonce'] ?? '', 'upn_nonce')) {
+            wp_send_json_error(['message' => __('Security check failed', 'user-page-notes')], 403);
         }
         
-        // Check if user is logged in
         if (!is_user_logged_in()) {
-            wp_die(__('You must be logged in to perform this action', 'user-page-notes'), 401);
-        }
-        
-        // Check if plugin is enabled
-        if (!get_option('upn_enabled', 1)) {
-            wp_die(__('Notes feature is currently disabled', 'user-page-notes'), 403);
+            wp_send_json_error(['message' => __('You must be logged in', 'user-page-notes')], 401);
         }
         
         return get_current_user_id();
     }
     
-    /**
-     * Add a new note via AJAX
-     */
-    public function addNote() {
+    public function addNote(): void {
         $user_id = $this->verifyRequest();
         
-        // Validate required fields
-        $page_url = esc_url_raw($_POST['page_url'] ?? '');
+        $page_url = filter_var($_POST['page_url'] ?? '', FILTER_SANITIZE_URL);
         $page_title = sanitize_text_field($_POST['page_title'] ?? '');
-        $content = sanitize_textarea_field($_POST['content'] ?? '');
-        $position_x = absint($_POST['position_x'] ?? 0);
-        $position_y = absint($_POST['position_y'] ?? 0);
+        $content = wp_kses_post($_POST['content'] ?? '');
         
-        if (empty($page_url) || empty($content)) {
-            wp_send_json_error([
-                'message' => __('Page URL and note content are required', 'user-page-notes')
-            ]);
+        if (empty($page_url) || empty(trim($content))) {
+            wp_send_json_error(['message' => __('Page URL and content are required', 'user-page-notes')]);
         }
         
-        // Add note to database
-        $note_id = $this->database->addNote(
-            $user_id,
-            $page_url,
-            $page_title,
-            $content,
-            $position_x,
-            $position_y
-        );
+        $result = $this->database->addNote($user_id, $page_url, $page_title, $content);
         
-        if (is_wp_error($note_id)) {
-            wp_send_json_error([
-                'message' => $note_id->get_error_message()
-            ]);
+        if (is_wp_error($result)) {
+            wp_send_json_error(['message' => $result->get_error_message()]);
         }
         
-        // Get the created note data
-        $note = $this->database->getNote($note_id, $user_id);
-        
-        if (!$note) {
-            wp_send_json_error([
-                'message' => __('Failed to retrieve created note', 'user-page-notes')
-            ]);
-        }
+        $note = $this->database->getNote($result, $user_id);
         
         wp_send_json_success([
             'message' => __('Note added successfully', 'user-page-notes'),
-            'note' => $this->formatNoteData($note)
+            'note' => $this->formatNote($note),
+            'note_id' => $result
         ]);
     }
     
-    /**
-     * Update an existing note via AJAX
-     */
-    public function updateNote() {
+    public function updateNote(): void {
         $user_id = $this->verifyRequest();
         
-        // Validate required fields
         $note_id = absint($_POST['note_id'] ?? 0);
-        $content = sanitize_textarea_field($_POST['content'] ?? '');
-        $position_x = isset($_POST['position_x']) ? absint($_POST['position_x']) : null;
-        $position_y = isset($_POST['position_y']) ? absint($_POST['position_y']) : null;
+        $content = wp_kses_post($_POST['content'] ?? '');
         
-        if (!$note_id || empty($content)) {
-            wp_send_json_error([
-                'message' => __('Note ID and content are required', 'user-page-notes')
-            ]);
+        if ($note_id <= 0 || empty(trim($content))) {
+            wp_send_json_error(['message' => __('Note ID and content are required', 'user-page-notes')]);
         }
         
         // Verify note belongs to user
         $existing_note = $this->database->getNote($note_id, $user_id);
         if (!$existing_note) {
-            wp_send_json_error([
-                'message' => __('Note not found or access denied', 'user-page-notes')
-            ]);
+            wp_send_json_error(['message' => __('Note not found', 'user-page-notes')]);
         }
         
-        // Update note
-        $success = $this->database->updateNote($note_id, $user_id, $content, $position_x, $position_y);
+        $success = $this->database->updateNote($note_id, $user_id, $content);
         
         if (!$success) {
-            wp_send_json_error([
-                'message' => __('Failed to update note', 'user-page-notes')
-            ]);
+            wp_send_json_error(['message' => __('Failed to update note', 'user-page-notes')]);
         }
         
-        // Get updated note data
         $note = $this->database->getNote($note_id, $user_id);
         
         wp_send_json_success([
             'message' => __('Note updated successfully', 'user-page-notes'),
-            'note' => $this->formatNoteData($note)
+            'note' => $this->formatNote($note)
         ]);
     }
     
-    /**
-     * Delete a note via AJAX
-     */
-    public function deleteNote() {
+    public function deleteNote(): void {
         $user_id = $this->verifyRequest();
         
-        // Validate required fields
         $note_id = absint($_POST['note_id'] ?? 0);
         
-        if (!$note_id) {
-            wp_send_json_error([
-                'message' => __('Note ID is required', 'user-page-notes')
-            ]);
+        if ($note_id <= 0) {
+            wp_send_json_error(['message' => __('Valid note ID is required', 'user-page-notes')]);
         }
         
         // Verify note belongs to user
         $existing_note = $this->database->getNote($note_id, $user_id);
         if (!$existing_note) {
-            wp_send_json_error([
-                'message' => __('Note not found or access denied', 'user-page-notes')
-            ]);
+            wp_send_json_error(['message' => __('Note not found', 'user-page-notes')]);
         }
         
-        // Delete note
         $success = $this->database->deleteNote($note_id, $user_id);
         
         if (!$success) {
-            wp_send_json_error([
-                'message' => __('Failed to delete note', 'user-page-notes')
-            ]);
+            wp_send_json_error(['message' => __('Failed to delete note', 'user-page-notes')]);
         }
         
         wp_send_json_success([
-            'message' => __('Note deleted successfully', 'user-page-notes')
+            'message' => __('Note deleted successfully', 'user-page-notes'),
+            'deleted_id' => $note_id
         ]);
     }
     
-    /**
-     * Get notes for the current page via AJAX
-     */
-    public function getNotes() {
+    public function getNotes(): void {
         $user_id = $this->verifyRequest();
         
-        // Validate required fields
-        $page_url = esc_url_raw($_POST['page_url'] ?? '');
+        $page_url = filter_var($_POST['page_url'] ?? '', FILTER_SANITIZE_URL);
         
         if (empty($page_url)) {
-            wp_send_json_error([
-                'message' => __('Page URL is required', 'user-page-notes')
-            ]);
+            wp_send_json_error(['message' => __('Page URL is required', 'user-page-notes')]);
         }
         
-        // Get notes for page
         $notes = $this->database->getUserNotesForPage($user_id, $page_url);
-        
-        // Format notes data
-        $formatted_notes = array_map([$this, 'formatNoteData'], $notes);
+        $formatted_notes = array_map($this->formatNote(...), $notes);
         
         wp_send_json_success([
-            'notes' => $formatted_notes
+            'notes' => $formatted_notes,
+            'count' => count($formatted_notes),
+            'page_url' => $page_url
         ]);
     }
     
-    /**
-     * Format note data for frontend consumption
-     */
-    private function formatNoteData($note) {
-        if (!$note) {
-            return null;
-        }
-        
+    private function formatNote(array $note): array {
         return [
-            'id' => absint($note['id']),
-            'content' => wp_kses_post($note['note_content']),
-            'position_x' => absint($note['note_position_x']),
-            'position_y' => absint($note['note_position_y']),
+            'id' => $note['id'],
+            'note_content' => $note['note_content'],
             'created_at' => $note['created_at'],
-            'updated_at' => $note['updated_at'],
-            'formatted_date' => human_time_diff(strtotime($note['created_at'])) . ' ' . __('ago', 'user-page-notes')
+            'updated_at' => $note['updated_at']
         ];
     }
 } 
