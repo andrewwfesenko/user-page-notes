@@ -1,362 +1,477 @@
-// Variables
-$primary-color: #2271b1;
-$primary-hover: #135e96;
-$secondary-color: #50575e;
-$success-color: #00a32a;
-$danger-color: #d63638;
-$warning-color: #dba617;
+/**
+ * User Page Notes - Modern SCSS with CSS Grid, Custom Properties, and Modern Features
+ * Optimized for CSS Grid, container queries, and logical properties
+ */
 
-$background-white: #ffffff;
-$background-light: #f6f7f7;
-$background-overlay: rgba(0, 0, 0, 0.5);
-
-$border-color: #ddd;
-$border-radius: 8px;
-$border-radius-small: 4px;
-
-$shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
-$shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
-$shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
-
-$font-size-sm: 12px;
-$font-size-base: 14px;
-$font-size-lg: 16px;
-
-$spacing-xs: 4px;
-$spacing-sm: 8px;
-$spacing-md: 16px;
-$spacing-lg: 24px;
-$spacing-xl: 32px;
-
-$z-index-modal: 1000;
-$z-index-overlay: 999;
-$z-index-tooltip: 1001;
-
-// Mixins
-@mixin button-reset {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    outline: none;
-    font-family: inherit;
+// Modern CSS Custom Properties (CSS Variables)
+:root {
+    // Color system with HSL for better manipulation
+    --upn-primary-hue: 220;
+    --upn-primary-sat: 70%;
+    --upn-primary: hsl(var(--upn-primary-hue), var(--upn-primary-sat), 50%);
+    --upn-primary-light: hsl(var(--upn-primary-hue), var(--upn-primary-sat), 60%);
+    --upn-primary-dark: hsl(var(--upn-primary-hue), var(--upn-primary-sat), 40%);
+    
+    // Semantic colors with modern contrast ratios
+    --upn-success: hsl(142, 71%, 45%);
+    --upn-warning: hsl(38, 92%, 50%);
+    --upn-error: hsl(0, 84%, 60%);
+    --upn-info: hsl(204, 94%, 60%);
+    
+    // Neutral colors with proper contrast
+    --upn-white: hsl(0, 0%, 100%);
+    --upn-gray-50: hsl(220, 20%, 98%);
+    --upn-gray-100: hsl(220, 20%, 95%);
+    --upn-gray-200: hsl(220, 13%, 91%);
+    --upn-gray-300: hsl(220, 13%, 83%);
+    --upn-gray-400: hsl(220, 9%, 65%);
+    --upn-gray-500: hsl(220, 9%, 46%);
+    --upn-gray-600: hsl(220, 13%, 37%);
+    --upn-gray-700: hsl(220, 18%, 25%);
+    --upn-gray-800: hsl(220, 23%, 18%);
+    --upn-gray-900: hsl(220, 26%, 14%);
+    
+    // Modern spacing scale using logical units
+    --upn-space-xs: 0.25rem;
+    --upn-space-sm: 0.5rem;
+    --upn-space-md: 1rem;
+    --upn-space-lg: 1.5rem;
+    --upn-space-xl: 2rem;
+    --upn-space-2xl: 3rem;
+    --upn-space-3xl: 4rem;
+    
+    // Typography scale with fluid sizing
+    --upn-text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    --upn-text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+    --upn-text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+    --upn-text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+    --upn-text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+    
+    // Modern border radius system
+    --upn-radius-sm: 0.25rem;
+    --upn-radius-md: 0.375rem;
+    --upn-radius-lg: 0.5rem;
+    --upn-radius-xl: 0.75rem;
+    --upn-radius-2xl: 1rem;
+    --upn-radius-full: 9999px;
+    
+    // Shadows with modern design
+    --upn-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --upn-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --upn-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --upn-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    
+    // Animation and transition values
+    --upn-transition-fast: 150ms ease;
+    --upn-transition-base: 200ms ease;
+    --upn-transition-slow: 300ms ease;
+    --upn-transition-bounce: 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    // Z-index scale
+    --upn-z-dropdown: 1000;
+    --upn-z-sticky: 1020;
+    --upn-z-fixed: 1030;
+    --upn-z-modal-backdrop: 1040;
+    --upn-z-modal: 1050;
+    --upn-z-popover: 1060;
+    --upn-z-tooltip: 1070;
+    --upn-z-toast: 1080;
+    
+    // Container sizes for responsive design
+    --upn-container-sm: 640px;
+    --upn-container-md: 768px;
+    --upn-container-lg: 1024px;
+    --upn-container-xl: 1280px;
 }
 
-@mixin flex-center {
-    display: flex;
+// Modern mixins with enhanced functionality
+@mixin focus-ring {
+    outline: 2px solid var(--upn-primary);
+    outline-offset: 2px;
+}
+
+@mixin button-base {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-
-@mixin transition($property: all, $duration: 0.3s, $easing: ease) {
-    transition: $property $duration $easing;
-}
-
-@mixin scrollbar-thin {
-    &::-webkit-scrollbar {
-        width: 6px;
+    gap: var(--upn-space-sm);
+    padding-block: var(--upn-space-sm);
+    padding-inline: var(--upn-space-md);
+    border: 1px solid transparent;
+    border-radius: var(--upn-radius-md);
+    font-size: var(--upn-text-sm);
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--upn-transition-base);
+    user-select: none;
+    
+    &:focus-visible {
+        @include focus-ring;
     }
     
-    &::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 3px;
-        
-        &:hover {
-            background: #a1a1a1;
-        }
+    &:disabled {
+        pointer-events: none;
+        opacity: 0.5;
     }
 }
 
-// Main container
-.upn-notes-container {
+@mixin card-base {
+    background: var(--upn-white);
+    border: 1px solid var(--upn-gray-200);
+    border-radius: var(--upn-radius-lg);
+    box-shadow: var(--upn-shadow-sm);
+    
+    @media (prefers-color-scheme: dark) {
+        background: var(--upn-gray-800);
+        border-color: var(--upn-gray-700);
+    }
+}
+
+@mixin modal-overlay {
     position: fixed;
-    top: 50%;
-    right: $spacing-lg;
-    transform: translateY(-50%);
-    z-index: $z-index-overlay;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: $font-size-base;
-    line-height: 1.4;
+    inset: 0;
+    background: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(4px);
+    z-index: var(--upn-z-modal-backdrop);
     
-    * {
+    @supports not (backdrop-filter: blur(4px)) {
+        background: rgb(0 0 0 / 0.75);
+    }
+}
+
+// Enhanced animation system
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+// Main container with modern layout
+.upn-notes-container {
+    isolation: isolate;
+    container-type: inline-size;
+    
+    // Modern reset for this component
+    *, *::before, *::after {
         box-sizing: border-box;
     }
 }
 
-// Toggle button
-.upn-toggle-btn {
-    @include button-reset;
-    @include flex-center;
-    @include transition;
-    
-    position: relative;
-    width: 56px;
-    height: 56px;
-    background: $primary-color;
-    color: white;
-    border-radius: 50%;
-    box-shadow: $shadow-medium;
+// Floating toggle button with enhanced design
+.upn-toggle-button {
+    @include button-base;
+    position: fixed;
+    inset-block-end: var(--upn-space-xl);
+    inset-inline-end: var(--upn-space-xl);
+    background: var(--upn-primary);
+    color: var(--upn-white);
+    border-radius: var(--upn-radius-full);
+    padding: var(--upn-space-md);
+    min-block-size: 3rem;
+    min-inline-size: 3rem;
+    box-shadow: var(--upn-shadow-lg);
+    z-index: var(--upn-z-fixed);
     
     &:hover {
-        background: $primary-hover;
+        background: var(--upn-primary-dark);
         transform: scale(1.05);
-        box-shadow: $shadow-heavy;
+        box-shadow: var(--upn-shadow-xl);
+    }
+    
+    &.upn-active {
+        background: var(--upn-primary-dark);
+    }
+    
+    // Notes count badge with modern positioning
+    .upn-notes-count {
+        position: absolute;
+        inset-block-start: -0.5rem;
+        inset-inline-end: -0.5rem;
+        background: var(--upn-error);
+        color: var(--upn-white);
+        font-size: var(--upn-text-xs);
+        font-weight: 600;
+        padding-block: 0.125rem;
+        padding-inline: 0.375rem;
+        border-radius: var(--upn-radius-full);
+        min-inline-size: 1.25rem;
+        display: grid;
+        place-items: center;
+        animation: scaleIn var(--upn-transition-bounce);
+    }
+    
+    // Responsive adjustments using container queries
+    @container (max-width: 768px) {
+        inset-block-end: var(--upn-space-lg);
+        inset-inline-end: var(--upn-space-lg);
+    }
+}
+
+// Notes panel with CSS Grid layout
+.upn-notes-panel {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: min(400px, 90vw);
+    background: var(--upn-white);
+    border-inline-start: 1px solid var(--upn-gray-200);
+    box-shadow: var(--upn-shadow-xl);
+    z-index: var(--upn-z-modal);
+    transform: translateX(100%);
+    transition: transform var(--upn-transition-slow);
+    
+    // Grid layout for panel structure
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    
+    &.upn-active {
+        transform: translateX(0);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        background: var(--upn-gray-800);
+        border-color: var(--upn-gray-700);
+    }
+    
+    // Panel header
+    .upn-panel-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: var(--upn-space-md);
+        padding: var(--upn-space-lg);
+        border-block-end: 1px solid var(--upn-gray-200);
+        
+        @media (prefers-color-scheme: dark) {
+            border-color: var(--upn-gray-700);
+        }
+        
+        .upn-panel-title {
+            font-size: var(--upn-text-lg);
+            font-weight: 600;
+            color: var(--upn-gray-900);
+            margin: 0;
+            
+            @media (prefers-color-scheme: dark) {
+                color: var(--upn-white);
+            }
+        }
+        
+        .upn-close-panel {
+            @include button-base;
+            background: transparent;
+            color: var(--upn-gray-500);
+            padding: var(--upn-space-xs);
+            
+            &:hover {
+                background: var(--upn-gray-100);
+                color: var(--upn-gray-700);
+            }
+            
+            @media (prefers-color-scheme: dark) {
+                color: var(--upn-gray-400);
+                
+                &:hover {
+                    background: var(--upn-gray-700);
+                    color: var(--upn-gray-200);
+                }
+            }
+        }
+    }
+    
+    // Panel content with scroll behavior
+    .upn-panel-content {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--upn-space-lg);
+        
+        // Custom scrollbar styling
+        &::-webkit-scrollbar {
+            inline-size: 0.375rem;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: var(--upn-gray-100);
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: var(--upn-gray-300);
+            border-radius: var(--upn-radius-full);
+            
+            &:hover {
+                background: var(--upn-gray-400);
+            }
+        }
+    }
+    
+    // Panel footer
+    .upn-panel-footer {
+        padding: var(--upn-space-lg);
+        border-block-start: 1px solid var(--upn-gray-200);
+        
+        @media (prefers-color-scheme: dark) {
+            border-color: var(--upn-gray-700);
+        }
+    }
+}
+
+// Modern notes list with CSS Grid
+.upn-notes-list {
+    display: grid;
+    gap: var(--upn-space-md);
+    
+    &:empty::after {
+        content: "No notes for this page yet.";
+        display: grid;
+        place-items: center;
+        padding: var(--upn-space-2xl);
+        color: var(--upn-gray-500);
+        font-style: italic;
+        text-align: center;
+    }
+}
+
+// Individual note card with modern design
+.upn-note {
+    @include card-base;
+    padding: var(--upn-space-lg);
+    display: grid;
+    gap: var(--upn-space-md);
+    animation: fadeIn var(--upn-transition-slow);
+    position: relative;
+    overflow: hidden;
+    
+    // Hover effects
+    &:hover {
+        box-shadow: var(--upn-shadow-md);
+        transform: translateY(-1px);
+    }
+    
+    // Note content with proper typography
+    .upn-note-content {
+        color: var(--upn-gray-700);
+        line-height: 1.6;
+        font-size: var(--upn-text-sm);
+        word-wrap: break-word;
+        
+        @media (prefers-color-scheme: dark) {
+            color: var(--upn-gray-300);
+        }
+    }
+    
+    // Note metadata with flex layout
+    .upn-note-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--upn-space-sm);
+        font-size: var(--upn-text-xs);
+        color: var(--upn-gray-500);
+        
+        .upn-note-date {
+            flex: 1;
+        }
+        
+        .upn-note-actions {
+            display: flex;
+            gap: var(--upn-space-xs);
+            
+            button {
+                @include button-base;
+                background: transparent;
+                color: var(--upn-gray-400);
+                padding: var(--upn-space-xs);
+                border-radius: var(--upn-radius-sm);
+                font-size: var(--upn-text-sm);
+                
+                &:hover {
+                    background: var(--upn-gray-100);
+                    color: var(--upn-gray-600);
+                }
+                
+                @media (prefers-color-scheme: dark) {
+                    color: var(--upn-gray-500);
+                    
+                    &:hover {
+                        background: var(--upn-gray-700);
+                        color: var(--upn-gray-300);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Add note button with primary styling
+.upn-add-note-btn {
+    @include button-base;
+    background: var(--upn-primary);
+    color: var(--upn-white);
+    inline-size: 100%;
+    justify-content: center;
+    
+    &:hover {
+        background: var(--upn-primary-dark);
     }
     
     &:active {
-        transform: scale(0.95);
-    }
-    
-    svg {
-        @include transition;
-    }
-    
-    &.active svg {
-        transform: rotate(180deg);
+        transform: scale(0.98);
     }
 }
 
-// Badge for note count
-.upn-badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    background: $danger-color;
-    color: white;
-    border-radius: 10px;
-    padding: 2px 6px;
-    font-size: $font-size-sm;
-    font-weight: bold;
-    min-width: 20px;
-    text-align: center;
-    line-height: 1.2;
-}
-
-// Notes panel
-.upn-notes-panel {
-    position: absolute;
-    right: 72px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 320px;
-    max-height: 500px;
-    background: $background-white;
-    border-radius: $border-radius;
-    box-shadow: $shadow-heavy;
-    opacity: 0;
-    visibility: hidden;
-    @include transition(all, 0.3s, cubic-bezier(0.25, 0.46, 0.45, 0.94));
-    transform: translateY(-50%) translateX(20px) scale(0.95);
-    
-    &.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(-50%) translateX(0) scale(1);
-    }
-}
-
-// Panel header
-.upn-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $spacing-md $spacing-lg;
-    border-bottom: 1px solid #eee;
-    
-    h3 {
-        margin: 0;
-        font-size: $font-size-lg;
-        font-weight: 600;
-        color: $secondary-color;
-    }
-    
-    .upn-add-btn,
-    .upn-close-btn {
-        @include button-reset;
-        @include flex-center;
-        @include transition;
-        
-        width: 32px;
-        height: 32px;
-        border-radius: $border-radius-small;
-        color: $secondary-color;
-        
-        &:hover {
-            background: $background-light;
-        }
-    }
-    
-    .upn-add-btn {
-        margin-right: $spacing-sm;
-        
-        &:hover {
-            color: $primary-color;
-        }
-    }
-}
-
-// Panel content
-.upn-panel-content {
-    max-height: 400px;
-    overflow-y: auto;
-    @include scrollbar-thin;
-}
-
-// Loading state
-.upn-loading {
-    @include flex-center;
-    flex-direction: column;
-    padding: $spacing-xl;
-    color: $secondary-color;
-    
-    p {
-        margin: $spacing-md 0 0 0;
-        font-size: $font-size-sm;
-    }
-}
-
-// Spinner animation
-.upn-spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid $primary-color;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-// Notes list
-.upn-notes-list {
-    padding: $spacing-md;
-}
-
-// Individual note
-.upn-note {
-    background: $background-white;
-    border: 1px solid $border-color;
-    border-radius: $border-radius-small;
-    padding: $spacing-md;
-    margin-bottom: $spacing-md;
-    @include transition;
-    
-    &:last-child {
-        margin-bottom: 0;
-    }
-    
-    &:hover {
-        border-color: $primary-color;
-        box-shadow: $shadow-light;
-    }
-}
-
-.upn-note-content {
-    margin-bottom: $spacing-sm;
-    line-height: 1.5;
-    word-wrap: break-word;
-    
-    p {
-        margin: 0 0 $spacing-sm 0;
-        
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-}
-
-.upn-note-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: $font-size-sm;
-    color: #666;
-}
-
-.upn-note-date {
-    font-style: italic;
-}
-
-.upn-note-actions {
-    display: flex;
-    gap: $spacing-xs;
-}
-
-.upn-note-edit,
-.upn-note-delete {
-    @include button-reset;
-    @include flex-center;
-    @include transition;
-    
-    width: 24px;
-    height: 24px;
-    border-radius: $border-radius-small;
-    color: #666;
-    
-    &:hover {
-        background: $background-light;
-    }
-}
-
-.upn-note-edit:hover {
-    color: $primary-color;
-}
-
-.upn-note-delete:hover {
-    color: $danger-color;
-}
-
-// Empty state
-.upn-empty-state {
-    @include flex-center;
-    flex-direction: column;
-    padding: $spacing-xl;
-    text-align: center;
-    color: #666;
-    
-    svg {
-        margin-bottom: $spacing-md;
-        opacity: 0.5;
-    }
-    
-    h4 {
-        margin: 0 0 $spacing-sm 0;
-        font-size: $font-size-lg;
-        font-weight: 600;
-    }
-    
-    p {
-        margin: 0;
-        font-size: $font-size-sm;
-        opacity: 0.8;
-    }
-}
-
-// Modal
+// Modal system with modern backdrop
 .upn-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $background-overlay;
-    z-index: $z-index-modal;
-    @include flex-center;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--upn-space-lg);
+    z-index: var(--upn-z-modal);
     opacity: 0;
     visibility: hidden;
-    @include transition;
-    margin: 0;
-    padding: 0;
+    transition: all var(--upn-transition-slow);
     
-    &.active {
+    @include modal-overlay;
+    
+    &.upn-active {
         opacity: 1;
         visibility: visible;
         
@@ -364,299 +479,262 @@ $z-index-tooltip: 1001;
             transform: scale(1);
         }
     }
-}
-
-.upn-modal-content {
-    background: $background-white;
-    border-radius: $border-radius;
-    box-shadow: $shadow-heavy;
-    width: 90%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow: hidden;
-    transform: scale(0.9);
-    @include transition(transform, 0.3s, cubic-bezier(0.25, 0.46, 0.45, 0.94));
-    position: relative;
-    margin: 0 auto;
-}
-
-.upn-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $spacing-lg;
-    border-bottom: 1px solid #eee;
-    background: $background-white;
     
-    h4 {
+    // Modal content with enhanced styling
+    .upn-modal-content {
+        @include card-base;
+        inline-size: min(500px, 90vw);
+        max-block-size: 80vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        transform: scale(0.95);
+        transition: transform var(--upn-transition-bounce);
         margin: 0;
-        font-size: $font-size-lg;
-        font-weight: 600;
-        color: $secondary-color;
+        padding: 0;
+        
+        @media (prefers-color-scheme: dark) {
+            background: var(--upn-gray-800);
+            border-color: var(--upn-gray-700);
+        }
     }
     
-    .upn-close-btn {
-        @include button-reset;
-        @include flex-center;
-        @include transition;
+    // Modal header
+    .upn-modal-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: var(--upn-space-md);
+        padding: var(--upn-space-lg);
+        border-block-end: 1px solid var(--upn-gray-200);
         
-        width: 32px;
-        height: 32px;
-        border-radius: $border-radius-small;
-        color: $secondary-color;
+        @media (prefers-color-scheme: dark) {
+            border-color: var(--upn-gray-700);
+        }
         
-        &:hover {
-            background: $background-light;
+        .upn-modal-title {
+            font-size: var(--upn-text-lg);
+            font-weight: 600;
+            color: var(--upn-gray-900);
+            margin: 0;
+            
+            @media (prefers-color-scheme: dark) {
+                color: var(--upn-white);
+            }
+        }
+        
+        .upn-modal-close {
+            @include button-base;
+            background: transparent;
+            color: var(--upn-gray-500);
+            padding: var(--upn-space-xs);
+            
+            &:hover {
+                background: var(--upn-gray-100);
+                color: var(--upn-gray-700);
+            }
+            
+            @media (prefers-color-scheme: dark) {
+                color: var(--upn-gray-400);
+                
+                &:hover {
+                    background: var(--upn-gray-700);
+                    color: var(--upn-gray-200);
+                }
+            }
+        }
+    }
+    
+    // Modal body with form styling
+    .upn-modal-body {
+        padding: var(--upn-space-lg);
+        overflow-y: auto;
+        
+        .upn-form-group {
+            display: grid;
+            gap: var(--upn-space-sm);
+            
+            label {
+                font-size: var(--upn-text-sm);
+                font-weight: 500;
+                color: var(--upn-gray-700);
+                
+                @media (prefers-color-scheme: dark) {
+                    color: var(--upn-gray-300);
+                }
+            }
+            
+            textarea {
+                inline-size: 100%;
+                min-block-size: 6rem;
+                padding: var(--upn-space-md);
+                border: 1px solid var(--upn-gray-300);
+                border-radius: var(--upn-radius-md);
+                font-family: inherit;
+                font-size: var(--upn-text-sm);
+                line-height: 1.5;
+                resize: vertical;
+                transition: border-color var(--upn-transition-base);
+                
+                &:focus {
+                    outline: none;
+                    border-color: var(--upn-primary);
+                    box-shadow: 0 0 0 3px rgb(var(--upn-primary-hue) var(--upn-primary-sat) 50% / 0.1);
+                }
+                
+                @media (prefers-color-scheme: dark) {
+                    background: var(--upn-gray-700);
+                    border-color: var(--upn-gray-600);
+                    color: var(--upn-white);
+                    
+                    &:focus {
+                        border-color: var(--upn-primary-light);
+                    }
+                }
+            }
+        }
+    }
+    
+    // Modal footer with action buttons
+    .upn-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--upn-space-sm);
+        padding: var(--upn-space-lg);
+        border-block-start: 1px solid var(--upn-gray-200);
+        
+        @media (prefers-color-scheme: dark) {
+            border-color: var(--upn-gray-700);
+        }
+        
+        .upn-btn {
+            @include button-base;
+            
+            &.upn-btn-primary {
+                background: var(--upn-primary);
+                color: var(--upn-white);
+                
+                &:hover {
+                    background: var(--upn-primary-dark);
+                }
+            }
+            
+            &.upn-btn-secondary {
+                background: transparent;
+                color: var(--upn-gray-600);
+                border-color: var(--upn-gray-300);
+                
+                &:hover {
+                    background: var(--upn-gray-50);
+                }
+                
+                @media (prefers-color-scheme: dark) {
+                    color: var(--upn-gray-400);
+                    border-color: var(--upn-gray-600);
+                    
+                    &:hover {
+                        background: var(--upn-gray-700);
+                    }
+                }
+            }
         }
     }
 }
 
-.upn-modal-body {
-    padding: $spacing-lg;
-    background: $background-white;
-}
-
-// Form elements
-.upn-form-group {
-    margin-bottom: $spacing-lg;
-    
-    textarea {
-        width: 100%;
-        min-height: 120px;
-        padding: $spacing-md;
-        border: 1px solid $border-color;
-        border-radius: $border-radius-small;
-        font-family: inherit;
-        font-size: $font-size-base;
-        line-height: 1.5;
-        resize: vertical;
-        @include transition;
-        box-sizing: border-box;
-        
-        &:focus {
-            outline: none;
-            border-color: $primary-color;
-            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
-        }
-        
-        &::placeholder {
-            color: #999;
-        }
-    }
-}
-
-.upn-form-actions {
-    display: flex;
-    gap: $spacing-md;
-    justify-content: flex-end;
-}
-
-// Buttons
-.upn-btn {
-    @include transition;
-    
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px $spacing-lg;
-    border: 1px solid transparent;
-    border-radius: $border-radius-small;
-    font-family: inherit;
-    font-size: $font-size-base;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    outline: none;
-    white-space: nowrap;
-    
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-    
-    &.upn-btn-primary {
-        background: $primary-color;
-        color: white;
-        border-color: $primary-color;
-        
-        &:hover:not(:disabled) {
-            background: $primary-hover;
-            border-color: $primary-hover;
-        }
-    }
-    
-    &.upn-btn-secondary {
-        background: transparent;
-        color: $secondary-color;
-        border-color: $border-color;
-        
-        &:hover:not(:disabled) {
-            background: $background-light;
-            border-color: #999;
-        }
-    }
-}
-
-// Messages
-.upn-message {
+// Notification system with modern animations
+.upn-notification {
     position: fixed;
-    top: $spacing-lg;
-    right: $spacing-lg;
-    z-index: $z-index-tooltip;
-    max-width: 400px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(100%);
-    @include transition;
+    inset-block-start: var(--upn-space-lg);
+    inset-inline-end: var(--upn-space-lg);
+    padding: var(--upn-space-md) var(--upn-space-lg);
+    border-radius: var(--upn-radius-lg);
+    color: var(--upn-white);
+    font-size: var(--upn-text-sm);
+    font-weight: 500;
+    box-shadow: var(--upn-shadow-lg);
+    z-index: var(--upn-z-toast);
+    animation: slideIn var(--upn-transition-slow);
+    max-inline-size: 400px;
     
-    &.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(0);
+    &.upn-notification-success {
+        background: var(--upn-success);
     }
     
-    &.success .upn-message-content {
-        background: $success-color;
+    &.upn-notification-error {
+        background: var(--upn-error);
     }
     
-    &.error .upn-message-content {
-        background: $danger-color;
+    &.upn-notification-warning {
+        background: var(--upn-warning);
     }
     
-    &.warning .upn-message-content {
-        background: $warning-color;
+    &.upn-notification-info {
+        background: var(--upn-info);
     }
 }
 
-.upn-message-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $spacing-md $spacing-lg;
-    background: $success-color;
-    color: white;
-    border-radius: $border-radius-small;
-    box-shadow: $shadow-medium;
-}
-
-.upn-message-text {
-    flex: 1;
-    margin-right: $spacing-md;
-}
-
-.upn-message-close {
-    @include button-reset;
-    @include flex-center;
-    @include transition;
+// Loading states with modern animations
+.upn-loading {
+    display: grid;
+    place-items: center;
+    padding: var(--upn-space-2xl);
+    color: var(--upn-gray-500);
     
-    width: 24px;
-    height: 24px;
-    color: white;
-    font-size: 18px;
-    
-    &:hover {
-        opacity: 0.8;
+    &::after {
+        content: "";
+        inline-size: 2rem;
+        block-size: 2rem;
+        border: 2px solid var(--upn-gray-200);
+        border-block-start-color: var(--upn-primary);
+        border-radius: var(--upn-radius-full);
+        animation: spin 1s linear infinite;
     }
 }
 
-// Responsive design
-@media (max-width: 768px) {
-    .upn-notes-container {
-        right: $spacing-md;
-    }
-    
-    .upn-notes-panel {
-        width: 280px;
-        right: 68px;
-    }
-    
-    .upn-modal-content {
-        width: 95%;
-        margin: $spacing-md;
-    }
-    
-    .upn-message {
-        right: $spacing-md;
-        max-width: calc(100vw - #{$spacing-lg * 2});
-    }
-}
-
-@media (max-width: 480px) {
-    .upn-notes-panel {
-        position: fixed;
-        right: 0;
-        top: 0;
-        transform: none;
-        width: 100vw;
-        height: 100vh;
-        max-height: none;
-        border-radius: 0;
-        
-        .upn-panel-content {
-            max-height: calc(100vh - 80px);
-        }
-    }
-    
-    .upn-toggle-btn {
-        width: 48px;
-        height: 48px;
-    }
-    
-    .upn-modal-content {
-        width: 95%;
-        max-height: 85vh;
-    }
-    
-    .upn-form-actions {
-        flex-direction: column;
-    }
-    
-    .upn-btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-// Animation classes
-.upn-fade-in {
-    animation: fadeIn 0.3s ease;
-}
-
-.upn-fade-out {
-    animation: fadeOut 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
+@keyframes spin {
     to {
-        opacity: 1;
-        transform: translateY(0);
+        transform: rotate(360deg);
     }
 }
 
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
+// Enhanced responsive design with container queries
+@container (max-width: 600px) {
+    .upn-notes-panel {
+        inline-size: 100vw;
     }
-    to {
-        opacity: 0;
-        transform: translateY(-10px);
+    
+    .upn-modal .upn-modal-content {
+        inline-size: 95vw;
+        margin: var(--upn-space-sm);
+    }
+    
+    .upn-note {
+        padding: var(--upn-space-md);
     }
 }
 
-// Utility classes
-.upn-sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+// High contrast mode support
+@media (prefers-contrast: high) {
+    :root {
+        --upn-gray-200: hsl(220, 13%, 80%);
+        --upn-gray-300: hsl(220, 13%, 70%);
+        --upn-gray-700: hsl(220, 18%, 20%);
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+// Print styles
+@media print {
+    .upn-toggle-button,
+    .upn-notes-panel,
+    .upn-modal {
+        display: none !important;
+    }
 } 

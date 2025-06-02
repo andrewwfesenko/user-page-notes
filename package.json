@@ -1,39 +1,69 @@
 {
   "name": "user-page-notes",
   "version": "1.0.0",
-  "description": "A WordPress plugin that allows logged-in users to add personal notes to any page",
-  "main": "user-page-notes.php",
+  "description": "Modern WordPress plugin for personal page notes with PHP 8+, WordPress 6+, and ES2022+ features",
+  "main": "assets/js/frontend.js",
   "scripts": {
-    "build-css": "sass assets/scss/frontend.scss assets/css/frontend.css",
-    "watch-css": "sass --watch assets/scss/frontend.scss:assets/css/frontend.css",
-    "minify-css": "cleancss -o assets/css/frontend.min.css assets/css/frontend.css",
-    "build": "npm run build-css && npm run minify-css",
-    "dev": "npm run watch-css"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/andrewwfesenko/user-page-notes.git"
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "sass assets/scss/frontend.scss assets/css/frontend.css --style=compressed --no-source-map",
+    "build:js": "terser assets/js/frontend.js -o assets/js/frontend.min.js --compress --mangle",
+    "watch": "npm run watch:css & npm run watch:js",
+    "watch:css": "sass assets/scss/frontend.scss assets/css/frontend.css --watch --style=expanded",
+    "watch:js": "chokidar 'assets/js/frontend.js' -c 'npm run build:js'",
+    "lint": "npm run lint:css && npm run lint:js",
+    "lint:css": "stylelint 'assets/scss/**/*.scss' --fix",
+    "lint:js": "eslint assets/js/frontend.js --fix",
+    "dev": "npm run watch",
+    "start": "npm run dev",
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "keywords": [
     "wordpress",
     "plugin",
     "notes",
     "ajax",
-    "user",
-    "frontend"
+    "php8",
+    "es2022",
+    "css-grid",
+    "modern"
   ],
-  "author": "Andrew Fesenko",
+  "author": {
+    "name": "Andrew Fesenko",
+    "url": "https://github.com/andrewwfesenko"
+  },
   "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrewwfesenko/user-page-notes.git"
+  },
   "bugs": {
     "url": "https://github.com/andrewwfesenko/user-page-notes/issues"
   },
   "homepage": "https://github.com/andrewwfesenko/user-page-notes#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "devDependencies": {
     "sass": "^1.69.0",
-    "clean-css-cli": "^5.6.2"
+    "terser": "^5.24.0",
+    "chokidar-cli": "^3.0.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard-scss": "^11.1.0",
+    "eslint": "^8.53.0",
+    "@eslint/js": "^8.53.0"
   },
-  "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
-  }
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not dead",
+    "> 0.5%",
+    "last 2 versions"
+  ],
+  "wordpress": {
+    "requires": "6.0",
+    "tested": "6.4",
+    "requires_php": "8.0"
+  },
+  "private": false
 } 
