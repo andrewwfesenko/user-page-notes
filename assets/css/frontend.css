@@ -327,6 +327,7 @@
     font-size: 14px;
     line-height: 1.5;
     transition: border-color 0.2s ease;
+    box-sizing: border-box;
 }
 
 #upn-note-content:focus {
